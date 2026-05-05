@@ -44,17 +44,24 @@
 
             <!-- Dashboard View -->
             <div id="dashboard-view" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem;" class="reveal">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;" class="reveal">
                     <div>
                         <span class="hero-subtitle">Management</span>
-                        <h2 class="section-title" style="margin-bottom: 0;">Bookings <span class="gradient-text">Overview</span></h2>
+                        <h2 class="section-title" style="margin-bottom: 0;">Admin <span class="gradient-text">Portal</span></h2>
                     </div>
-                    <button id="logout-btn" class="btn btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.8rem;">
-                        <i data-lucide="log-out" style="width: 16px; margin-right: 0.5rem;"></i> Exit
-                    </button>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="glass-panel" style="display: flex; padding: 0.25rem;">
+                            <button id="view-bookings-btn" class="btn active-tab" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; background: var(--accent-gold); color: black;">Bookings</button>
+                            <button id="view-services-btn" class="btn" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; color: var(--text-muted);">Services</button>
+                        </div>
+                        <button id="logout-btn" class="btn btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.8rem;">
+                            <i data-lucide="log-out" style="width: 16px; margin-right: 0.5rem;"></i> Exit
+                        </button>
+                    </div>
                 </div>
 
-                <div class="glass-panel reveal delay-1" style="overflow: hidden;">
+                <!-- Bookings Table -->
+                <div id="bookings-container" class="glass-panel reveal delay-1" style="overflow: hidden;">
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -65,15 +72,64 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="bookings-tbody">
-                            <!-- Injected -->
-                        </tbody>
+                        <tbody id="bookings-tbody"></tbody>
                     </table>
+                </div>
+
+                <!-- Services Table -->
+                <div id="services-container" style="display: none;" class="reveal">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.5rem;">Manage <span class="gold-text">Treatments</span></h3>
+                        <button onclick="showServiceModal()" class="btn btn-primary" style="padding: 0.6rem 1.25rem; font-size: 0.8rem;">+ Add Service</button>
+                    </div>
+                    <div class="glass-panel" style="overflow: hidden;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Service Name</th>
+                                    <th>Price</th>
+                                    <th>Duration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="services-tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
         </div>
     </main>
+
+    <!-- Service Modal -->
+    <div id="service-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center;">
+        <div class="glass-panel" style="width: 100%; max-width: 500px; padding: 3rem;">
+            <h3 id="modal-title" style="margin-bottom: 2rem; font-size: 1.5rem;">Add New Service</h3>
+            <form id="service-form">
+                <input type="hidden" id="edit-service-id">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="service-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (₹)</label>
+                    <input type="number" id="service-price" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Duration</label>
+                    <input type="text" id="service-duration" class="form-input" placeholder="e.g. 1 hour" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="service-description" class="form-input" style="height: 100px;" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                    <button type="button" onclick="closeServiceModal()" class="btn btn-outline" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/main.js"></script>
@@ -82,11 +138,38 @@
             const loginView = document.getElementById('login-view');
             const dashboardView = document.getElementById('dashboard-view');
             const loginForm = document.getElementById('login-form');
-            const tbody = document.getElementById('bookings-tbody');
+            const bookingsTbody = document.getElementById('bookings-tbody');
+            const servicesTbody = document.getElementById('services-tbody');
             
             let token = localStorage.getItem('adminToken');
 
             if (token) showDashboard();
+
+            // Tab Switching Logic
+            const bookingsBtn = document.getElementById('view-bookings-btn');
+            const servicesBtn = document.getElementById('view-services-btn');
+            const bookingsContainer = document.getElementById('bookings-container');
+            const servicesContainer = document.getElementById('services-container');
+
+            bookingsBtn.addEventListener('click', () => {
+                bookingsBtn.style.background = 'var(--accent-gold)';
+                bookingsBtn.style.color = 'black';
+                servicesBtn.style.background = 'transparent';
+                servicesBtn.style.color = 'var(--text-muted)';
+                bookingsContainer.style.display = 'block';
+                servicesContainer.style.display = 'none';
+                fetchBookings();
+            });
+
+            servicesBtn.addEventListener('click', () => {
+                servicesBtn.style.background = 'var(--accent-gold)';
+                servicesBtn.style.color = 'black';
+                bookingsBtn.style.background = 'transparent';
+                bookingsBtn.style.color = 'var(--text-muted)';
+                servicesContainer.style.display = 'block';
+                bookingsContainer.style.display = 'none';
+                fetchServices();
+            });
 
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -130,7 +213,7 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    tbody.innerHTML = '';
+                    bookingsTbody.innerHTML = '';
                     data.forEach(booking => {
                         const date = new Date(booking.appointmentDate).toLocaleString('en-IN', {
                             dateStyle: 'medium',
@@ -151,11 +234,95 @@
                                 ` : '-'}
                             </td>
                         `;
-                        tbody.appendChild(tr);
+                        bookingsTbody.appendChild(tr);
                     });
                     lucide.createIcons();
                 });
             }
+
+            function fetchServices() {
+                fetch(`${API_BASE_URL}/api/services`)
+                .then(res => res.json())
+                .then(data => {
+                    servicesTbody.innerHTML = '';
+                    data.forEach(s => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${s.name}</td>
+                            <td>₹${s.price}</td>
+                            <td>${s.duration}</td>
+                            <td>
+                                <div style="display: flex; gap: 0.75rem;">
+                                    <button onclick='editService(${JSON.stringify(s)})' class="btn btn-outline" style="padding: 0.4rem; border-radius: 4px;"><i data-lucide="edit-3" style="width: 16px;"></i></button>
+                                    <button onclick="deleteService('${s._id}')" class="btn btn-outline" style="padding: 0.4rem; border-radius: 4px; color: var(--accent-rose);"><i data-lucide="trash-2" style="width: 16px;"></i></button>
+                                </div>
+                            </td>
+                        `;
+                        servicesTbody.appendChild(tr);
+                    });
+                    lucide.createIcons();
+                });
+            }
+
+            window.showServiceModal = (s = null) => {
+                const modal = document.getElementById('service-modal');
+                const title = document.getElementById('modal-title');
+                const form = document.getElementById('service-form');
+                
+                modal.style.display = 'flex';
+                if (s) {
+                    title.textContent = 'Edit Service';
+                    document.getElementById('edit-service-id').value = s._id;
+                    document.getElementById('service-name').value = s.name;
+                    document.getElementById('service-price').value = s.price;
+                    document.getElementById('service-duration').value = s.duration;
+                    document.getElementById('service-description').value = s.description;
+                } else {
+                    title.textContent = 'Add New Service';
+                    form.reset();
+                    document.getElementById('edit-service-id').value = '';
+                }
+            };
+
+            window.closeServiceModal = () => {
+                document.getElementById('service-modal').style.display = 'none';
+            };
+
+            document.getElementById('service-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('edit-service-id').value;
+                const data = {
+                    name: document.getElementById('service-name').value,
+                    price: parseInt(document.getElementById('service-price').value),
+                    duration: document.getElementById('service-duration').value,
+                    description: document.getElementById('service-description').value
+                };
+
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `${API_BASE_URL}/api/services/${id}` : `${API_BASE_URL}/api/services`;
+
+                fetch(url, {
+                    method,
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                }).then(() => {
+                    closeServiceModal();
+                    fetchServices();
+                });
+            });
+
+            window.editService = (s) => showServiceModal(s);
+
+            window.deleteService = (id) => {
+                if (!confirm('Are you sure you want to delete this service?')) return;
+                fetch(`${API_BASE_URL}/api/services/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(() => fetchServices());
+            };
 
             window.updateStatus = (id, status) => {
                 fetch(`${API_BASE_URL}/api/bookings/${id}/status`, {
@@ -166,7 +333,7 @@
                     },
                     body: JSON.stringify({ status })
                 }).then(() => fetchBookings());
-            }
+            };
         });
     </script>
 </body>

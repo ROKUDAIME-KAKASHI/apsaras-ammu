@@ -140,6 +140,77 @@ def get_services():
     else:
         return jsonify(in_memory_db["services"]), 200
 
+@app.route('/api/services', methods=['POST'])
+def add_service():
+    if not check_auth(request):
+        return jsonify({"error": "Unauthorized"}), 401
+    data = request.json
+    if USE_DB:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO services (name, price, duration, description) VALUES (%s, %s, %s, %s) RETURNING *",
+            (data['name'], data['price'], data['duration'], data['description'])
+        )
+        new_service = cur.fetchone()
+        cur.close()
+        conn.close()
+        return jsonify(format_row(dict(new_service))), 201
+    else:
+        new_service = {**data, "_id": str(len(in_memory_db["services"]) + 1)}
+        in_memory_db["services"].append(new_service)
+        return jsonify(new_service), 201
+
+@app.route('/api/services/<service_id>', methods=['PUT', 'DELETE'])
+def update_service(service_id):
+    if not check_auth(request):
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    if request.method == 'DELETE':
+        if USE_DB:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute("DELETE FROM services WHERE id = %s", (service_id,))
+            cur.close()
+            conn.close()
+            return jsonify({"message": "Service deleted"}), 200
+        else:
+            in_memory_db["services"] = [s for s in in_memory_db["services"] if s["_id"] != service_id]
+            return jsonify({"message": "Service deleted"}), 200
+            
+    data = request.json
+    if USE_DB:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE services SET name=%s, price=%s, duration=%s, description=%s WHERE id=%s RETURNING *",
+            (data['name'], data['price'], data['duration'], data['description'], service_id)
+        )
+        updated = cur.fetchone()
+        cur.close()
+        conn.close()
+        return jsonify(format_row(dict(updated))), 200
+    else:
+        for s in in_memory_db["services"]:
+            if s["_id"] == service_id:
+                s.update(data)
+                return jsonify(s), 200
+        return jsonify({"error": "Not found"}), 404
+
+@app.route('/api/bookings/lookup/<phone>', methods=['GET'])
+def lookup_bookings(phone):
+    if USE_DB:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM bookings WHERE phone_number = %s ORDER BY appointment_date DESC", (phone,))
+        bookings = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify([format_row(dict(b)) for b in bookings]), 200
+    else:
+        results = [b for b in in_memory_db["bookings"] if b["phoneNumber"] == phone]
+        return jsonify(results), 200
+
 @app.route('/api/bookings', methods=['GET', 'POST'])
 def handle_bookings():
     if request.method == 'POST':

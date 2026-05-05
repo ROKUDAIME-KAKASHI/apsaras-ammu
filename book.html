@@ -59,6 +59,11 @@
                     </button>
                 </form>
 
+                <div style="text-align: center; margin-top: 2rem;">
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Already have an appointment?</p>
+                    <button onclick="showLookupModal()" class="btn btn-outline" style="margin-top: 1rem; padding: 0.6rem 1.5rem; font-size: 0.8rem;">Check Status</button>
+                </div>
+
                 <div id="success-message" style="display: none; text-align: center; padding: 2rem 0;">
                     <i data-lucide="check-circle" class="gold-text" style="width: 64px; height: 64px; margin-bottom: 1.5rem;"></i>
                     <h3 style="font-size: 2rem; margin-bottom: 1rem;">Booking Confirmed</h3>
@@ -69,10 +74,77 @@
         </div>
     </main>
 
+    <!-- Lookup Modal -->
+    <div id="lookup-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center;">
+        <div class="glass-panel" style="width: 100%; max-width: 500px; padding: 3rem;">
+            <h3 style="margin-bottom: 2rem; font-size: 1.5rem;">Check <span class="gradient-text">Appointment</span></h3>
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="tel" id="lookup-phone" class="form-input" placeholder="+91 00000 00000">
+                    <button onclick="performLookup()" class="btn btn-primary" style="padding: 0 1.5rem;"><i data-lucide="search"></i></button>
+                </div>
+            </div>
+            <div id="lookup-results" style="max-height: 300px; overflow-y: auto; margin-top: 1.5rem;"></div>
+            <button onclick="closeLookupModal()" class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;">Close</button>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ... (previous logic for form submission and service fetching)
+
+            window.showLookupModal = () => {
+                document.getElementById('lookup-modal').style.display = 'flex';
+                lucide.createIcons();
+            };
+
+            window.closeLookupModal = () => {
+                document.getElementById('lookup-modal').style.display = 'none';
+                document.getElementById('lookup-results').innerHTML = '';
+            };
+
+            window.performLookup = () => {
+                const phone = document.getElementById('lookup-phone').value;
+                const resultsDiv = document.getElementById('lookup-results');
+                
+                if (!phone) return;
+
+                resultsDiv.innerHTML = '<p class="gold-text" style="text-align: center;">Searching...</p>';
+
+                fetch(`${API_BASE_URL}/api/bookings/lookup/${phone}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length === 0) {
+                            resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted);">No appointments found for this number.</p>';
+                            return;
+                        }
+                        resultsDiv.innerHTML = '';
+                        data.forEach(b => {
+                            const date = new Date(b.appointmentDate).toLocaleString('en-IN', {
+                                dateStyle: 'medium',
+                                timeStyle: 'short'
+                            });
+                            const div = document.createElement('div');
+                            div.style.padding = '1rem';
+                            div.style.marginBottom = '0.75rem';
+                            div.style.border = '1px solid var(--border-color)';
+                            div.style.borderRadius = '8px';
+                            div.innerHTML = `
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 600;">${b.customerName}</span>
+                                    <span class="status-badge status-${b.status.toLowerCase()}" style="font-size: 0.6rem; padding: 0.2rem 0.5rem;">${b.status}</span>
+                                </div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">${date}</div>
+                            `;
+                            resultsDiv.appendChild(div);
+                        });
+                    });
+            };
+            
+            // Re-adding the original form logic that was there
             const urlParams = new URLSearchParams(window.location.search);
             const initialServiceId = urlParams.get('serviceId');
             const select = document.getElementById('serviceId');
@@ -113,6 +185,7 @@
                 .then(res => {
                     if (!res.ok) throw new Error();
                     form.style.display = 'none';
+                    document.querySelector('.form-container > div:last-child').style.display = 'none'; // hide "already have appointment"
                     success.style.display = 'block';
                     lucide.createIcons();
                 })

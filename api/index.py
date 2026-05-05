@@ -1,7 +1,7 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from datetime import datetime
 from dotenv import load_dotenv
@@ -189,6 +189,18 @@ def handle_bookings():
         else:
             sorted_bookings = sorted(in_memory_db["bookings"], key=lambda x: x["createdAt"], reverse=True)
             return jsonify(sorted_bookings), 200
+
+# --- Static File Serving (for local development) ---
+@app.route('/')
+def serve_index():
+    return send_from_directory('..', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    # Ensure we don't accidentally serve system files
+    if os.path.exists(os.path.join('..', path)):
+        return send_from_directory('..', path)
+    return send_from_directory('..', 'index.html')
 
 @app.route('/api/bookings/<booking_id>/status', methods=['PATCH'])
 def update_booking_status(booking_id):

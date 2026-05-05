@@ -1,169 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Appointment - Apsaras Ammu</title>
-  <link rel="stylesheet" href="/style.css">
-  <style>
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-main);
-      font-weight: 400;
-      border-bottom: 2px solid transparent;
-      padding-bottom: 0.25rem;
-      transition: all 0.3s ease;
-    }
-    .nav-link.active, .nav-link:hover {
-      color: var(--accent-gold);
-      border-bottom: 2px solid var(--accent-gold);
-    }
-    .booking-container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment | Apsaras Ammu</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  
-  <nav class="glass-nav">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 80px;">
-      <a href="/" style="display: flex; align-items: center; gap: 0.5rem; border: none;">
-        <i data-lucide="sparkles" color="var(--accent-gold)" style="width: 28px; height: 28px;"></i>
-        <h1 style="margin: 0; font-size: 1.5rem; letter-spacing: 1px; color: var(--text-main);">Apsaras</h1>
-      </a>
-      <div style="display: flex; gap: 2rem;">
-        <a href="/index.html" class="nav-link"><i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Home</a>
-        <a href="/services.html" class="nav-link"><i data-lucide="scissors" style="width: 18px; height: 18px;"></i> Services</a>
-        <a href="/book.html" class="nav-link"><i data-lucide="calendar" style="width: 18px; height: 18px;"></i> Book</a>
-        <a href="/admin.html" class="nav-link"><i data-lucide="user-cog" style="width: 18px; height: 18px;"></i> Admin</a>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <div class="container animate-fade-in" style="padding: 4rem 2rem;">
-      <div class="booking-container glass-panel" style="padding: 3rem;">
-        <div style="text-align: center; margin-bottom: 2.5rem;">
-          <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Book Your <span style="color: var(--text-main);">Session</span></h2>
-          <p style="color: var(--text-muted);">Reserve your premium beauty experience</p>
+    
+    <nav class="glass-nav">
+        <div class="container nav-container">
+            <a href="/index.html" class="logo">
+                <i data-lucide="sparkles" class="gold-text"></i>
+                APSARAS
+            </a>
+            <div class="nav-links">
+                <a href="/index.html" class="nav-link"><i data-lucide="sparkles"></i> Home</a>
+                <a href="/services.html" class="nav-link"><i data-lucide="scissors"></i> Services</a>
+                <a href="/book.html" class="nav-link active"><i data-lucide="calendar"></i> Book</a>
+                <a href="/admin.html" class="nav-link"><i data-lucide="user-cog"></i> Admin</a>
+            </div>
         </div>
+    </nav>
 
-        <form id="booking-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          
-          <div class="form-group">
-            <label for="customerName">Full Name</label>
-            <input type="text" id="customerName" name="customerName" class="form-control" required placeholder="Jane Doe">
-          </div>
+    <main>
+        <div class="container" style="padding-top: 5rem;">
+            <div class="form-container glass-panel reveal">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <span class="hero-subtitle">Reservations</span>
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Book Your <span class="gradient-text">Experience</span></h2>
+                </div>
 
-          <div class="form-group">
-            <label for="phoneNumber">Phone Number</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" class="form-control" required placeholder="+91 98765 43210">
-          </div>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="customerName" class="form-input" placeholder="Enter your name" required>
+                    </div>
 
-          <div class="form-group">
-            <label for="appointmentDate">Date & Time</label>
-            <input type="datetime-local" id="appointmentDate" name="appointmentDate" class="form-control" required>
-          </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" id="phoneNumber" class="form-input" placeholder="+91 00000 00000" required>
+                    </div>
 
-          <div class="form-group">
-            <label for="serviceId">Select Service</label>
-            <select id="serviceId" name="serviceId" class="form-control" required>
-              <option value="">Loading services...</option>
-            </select>
-          </div>
+                    <div class="form-group">
+                        <label class="form-label">Appointment Date & Time</label>
+                        <input type="datetime-local" id="appointmentDate" class="form-input" required>
+                    </div>
 
-          <div id="form-error" style="display: none; color: var(--accent-rose); font-size: 0.9rem; text-align: center;"></div>
+                    <div class="form-group">
+                        <label class="form-label">Select Service</label>
+                        <select id="serviceId" class="form-input" required>
+                            <option value="">Loading services...</option>
+                        </select>
+                    </div>
 
-          <button type="submit" class="btn btn-primary" id="submit-btn" style="margin-top: 1rem;">
-            Confirm Booking
-          </button>
-        </form>
+                    <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                        Confirm Appointment
+                    </button>
+                </form>
 
-        <div id="success-message" style="display: none; text-align: center; padding: 2rem 0;">
-          <i data-lucide="check-circle" color="var(--accent-gold)" style="width: 48px; height: 48px; margin-bottom: 1rem;"></i>
-          <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Booking Confirmed!</h3>
-          <p style="color: var(--text-muted);">We have received your appointment request. See you soon!</p>
-          <a href="/services" class="btn btn-outline" style="margin-top: 1.5rem;">Back to Services</a>
+                <div id="success-message" style="display: none; text-align: center; padding: 2rem 0;">
+                    <i data-lucide="check-circle" class="gold-text" style="width: 64px; height: 64px; margin-bottom: 1.5rem;"></i>
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem;">Booking Confirmed</h3>
+                    <p class="hero-description">We look forward to welcoming you soon.</p>
+                    <a href="/services.html" class="btn btn-outline" style="margin-top: 2rem;">Return to Menu</a>
+                </div>
+            </div>
         </div>
+    </main>
 
-      </div>
-    </div>
-  </main>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialServiceId = urlParams.get('serviceId');
+            const select = document.getElementById('serviceId');
+            const form = document.getElementById('booking-form');
+            const success = document.getElementById('success-message');
 
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const initialServiceId = urlParams.get('serviceId');
-      
-      const serviceSelect = document.getElementById('serviceId');
-      const form = document.getElementById('booking-form');
-      const submitBtn = document.getElementById('submit-btn');
-      const errorEl = document.getElementById('form-error');
-      const successEl = document.getElementById('success-message');
+            fetch(`${API_BASE_URL}/api/services`)
+                .then(res => res.json())
+                .then(data => {
+                    select.innerHTML = '<option value="">Choose a treatment</option>';
+                    data.forEach(service => {
+                        const opt = document.createElement('option');
+                        opt.value = service._id;
+                        opt.textContent = `${service.name} (₹${service.price})`;
+                        if (service._id === initialServiceId) opt.selected = true;
+                        select.appendChild(opt);
+                    });
+                });
 
-      // Fetch services to populate dropdown
-      fetch(`${API_BASE_URL}/api/services`)
-        .then(res => res.json())
-        .then(data => {
-          serviceSelect.innerHTML = '<option value="">-- Choose a treatment --</option>';
-          data.forEach(service => {
-            const option = document.createElement('option');
-            option.value = service._id;
-            option.textContent = `${service.name} - ₹${service.price} (${service.duration})`;
-            if (service._id === initialServiceId) {
-              option.selected = true;
-            }
-            serviceSelect.appendChild(option);
-          });
-        })
-        .catch(err => {
-          console.error("Failed to fetch services:", err);
-          serviceSelect.innerHTML = '<option value="">Error loading services</option>';
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submit-btn');
+                btn.disabled = true;
+                btn.textContent = 'Securing your spot...';
+
+                const data = {
+                    customerName: document.getElementById('customerName').value,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    appointmentDate: document.getElementById('appointmentDate').value,
+                    serviceId: document.getElementById('serviceId').value
+                };
+
+                fetch(`${API_BASE_URL}/api/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error();
+                    form.style.display = 'none';
+                    success.style.display = 'block';
+                    lucide.createIcons();
+                })
+                .catch(() => {
+                    alert('Something went wrong. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = 'Confirm Appointment';
+                });
+            });
         });
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Processing...';
-        errorEl.style.display = 'none';
-
-        const formData = {
-          customerName: document.getElementById('customerName').value,
-          phoneNumber: document.getElementById('phoneNumber').value,
-          appointmentDate: document.getElementById('appointmentDate').value,
-          serviceId: document.getElementById('serviceId').value
-        };
-
-        fetch(`${API_BASE_URL}/api/bookings`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        })
-        .then(res => {
-          if (!res.ok) throw new Error('Failed to create booking');
-          return res.json();
-        })
-        .then(data => {
-          form.style.display = 'none';
-          successEl.style.display = 'block';
-          lucide.createIcons();
-        })
-        .catch(err => {
-          errorEl.textContent = 'There was an error submitting your booking. Please try again.';
-          errorEl.style.display = 'block';
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Confirm Booking';
-        });
-      });
-    });
-  </script>
+    </script>
 </body>
 </html>

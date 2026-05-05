@@ -191,16 +191,26 @@ def handle_bookings():
             return jsonify(sorted_bookings), 200
 
 # --- Static File Serving (for local development) ---
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 @app.route('/')
 def serve_index():
-    return send_from_directory('..', 'index.html')
+    return send_from_directory(PROJECT_ROOT, 'index.html')
 
 @app.route('/<path:path>')
 def serve_static(path):
-    # Ensure we don't accidentally serve system files
-    if os.path.exists(os.path.join('..', path)):
-        return send_from_directory('..', path)
-    return send_from_directory('..', 'index.html')
+    # Check for direct file match (css, js, images, html)
+    file_path = os.path.join(PROJECT_ROOT, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        return send_from_directory(PROJECT_ROOT, path)
+    
+    # Check if it's an extensionless URL that matches an .html file
+    html_path = path + '.html'
+    if os.path.exists(os.path.join(PROJECT_ROOT, html_path)):
+        return send_from_directory(PROJECT_ROOT, html_path)
+
+    # Final fallback to index.html
+    return send_from_directory(PROJECT_ROOT, 'index.html')
 
 @app.route('/api/bookings/<booking_id>/status', methods=['PATCH'])
 def update_booking_status(booking_id):

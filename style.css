@@ -23,6 +23,22 @@
     
     --nav-height: 80px;
     --container-max: 1200px;
+    --page-transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page Transition Overlay */
+body {
+    opacity: 0;
+    transition: opacity var(--page-transition);
+}
+
+body.page-visible {
+    opacity: 1;
+}
+
+body.page-exit {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Base Reset */

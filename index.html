@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apsaras Ammu - Premium Care</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-main);
+      font-weight: 400;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 0.25rem;
+      transition: all 0.3s ease;
+    }
+    .nav-link.active, .nav-link:hover {
+      color: var(--accent-gold);
+      border-bottom: 2px solid var(--accent-gold);
+    }
+    
+    .hero-section {
+      height: calc(100vh - 80px);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, var(--bg-card) 0%, var(--bg-dark) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-shape-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 40vw;
+      height: 40vw;
+      background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-shape-2 {
+      position: absolute;
+      bottom: -20%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(183,110,121,0.05) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-content {
+      text-align: center;
+      z-index: 1;
+      max-width: 800px;
+    }
+    .hero-subtitle {
+      color: var(--accent-rose);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-size: 4.5rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+    .hero-title span {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--accent-gold);
+      background-image: linear-gradient(45deg, var(--accent-gold), var(--accent-rose));
+      -webkit-background-clip: text;
+    }
+    .hero-text {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin: 0 auto 3rem auto;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  
+  <nav class="glass-nav">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; height: 80px;">
+      <a href="/" style="display: flex; align-items: center; gap: 0.5rem; border: none;">
+        <i data-lucide="sparkles" color="var(--accent-gold)" style="width: 28px; height: 28px;"></i>
+        <h1 style="margin: 0; font-size: 1.5rem; letter-spacing: 1px; color: var(--text-main);">Apsaras</h1>
+      </a>
+      <div style="display: flex; gap: 2rem;">
+        <a href="/" class="nav-link"><i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Home</a>
+        <a href="/services" class="nav-link"><i data-lucide="scissors" style="width: 18px; height: 18px;"></i> Services</a>
+        <a href="/book" class="nav-link"><i data-lucide="calendar" style="width: 18px; height: 18px;"></i> Book</a>
+        <a href="/admin" class="nav-link"><i data-lucide="user-cog" style="width: 18px; height: 18px;"></i> Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="animate-fade-in" style="display: flex; flex-direction: column; align-items: center;">
+      <section class="hero-section">
+        <div class="hero-shape-1"></div>
+        <div class="hero-shape-2"></div>
+
+        <div class="container hero-content">
+          <h4 class="hero-subtitle delay-100">Welcome to Premium Care</h4>
+          <h1 class="hero-title delay-200">
+            Discover Your True <br/>
+            <span>Beauty</span>
+          </h1>
+          <p class="hero-text delay-300">
+            Experience world-class beauty treatments in an atmosphere of pure luxury and relaxation. Book your session today and let us pamper you.
+          </p>
+          <div class="hero-actions">
+            <a href="/book" class="btn btn-primary delay-300">Book Appointment</a>
+            <a href="/services" class="btn btn-outline delay-300">Explore Services</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/main.js"></script>
+</body>
+</html>

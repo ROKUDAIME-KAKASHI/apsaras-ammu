@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, IndianRupee } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '/_/backend';
+const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
 
 const Services = () => {
   const [services, setServices] = useState([]);

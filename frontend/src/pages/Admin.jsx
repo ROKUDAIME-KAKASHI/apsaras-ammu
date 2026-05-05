@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, LogOut, Lock } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '/_/backend';
+const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:5000' : '';
 
 const Admin = () => {
   const [bookings, setBookings] = useState([]);

@@ -282,12 +282,17 @@ main {
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    transition: all 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                border-color 0.4s ease, 
+                background 0.4s ease,
+                box-shadow 0.4s ease;
 }
 
 .glass-panel:hover {
     border-color: var(--border-accent);
     background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 /* Service Cards */
@@ -392,6 +397,24 @@ main {
     background: rgba(255, 255, 255, 0.08);
 }
 
+/* Custom Dropdown Styling */
+select.form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    padding-right: 3rem;
+    cursor: pointer;
+}
+
+select.form-input option {
+    background-color: #1a1a1a;
+    color: white;
+    font-family: var(--font-body);
+    padding: 1rem;
+}
+
 /* Tables */
 .admin-table {
     width: 100%;
@@ -431,7 +454,7 @@ main {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -440,7 +463,8 @@ main {
 }
 
 .reveal {
-    animation: fadeInUp 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    opacity: 0;
+    animation: fadeInUp 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .delay-1 { animation-delay: 0.2s; }

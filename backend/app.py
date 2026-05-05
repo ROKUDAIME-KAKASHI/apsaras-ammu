@@ -42,6 +42,7 @@ def get_db_connection():
 
 # Initialize tables
 def init_db():
+    global USE_DB
     if not USE_DB:
         print("DATABASE_URL not set. Falling back to in-memory mode.")
         return
@@ -91,7 +92,6 @@ def init_db():
         conn.close()
         print("Connected to PostgreSQL (Neon) and initialized tables successfully!")
     except Exception as e:
-        global USE_DB
         USE_DB = False
         print(f"Failed to connect or initialize DB: {e}")
         print("Falling back to in-memory database mode.")
